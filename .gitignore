@@ -82,6 +82,3 @@ debug.log
 
 # Puppeteer acceptance tests.
 jest-runtime-config.json
-test_output.log
-oppia_env/
-oppia_venv/
