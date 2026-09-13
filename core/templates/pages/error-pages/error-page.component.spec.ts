@@ -55,6 +55,7 @@ describe('ErrorPageComponent', () => {
   });
 
   afterEach(() => {
+    // Clean up sessionStorage after each test.
     windowRef.nativeWindow.sessionStorage.clear();
     fixture.destroy();
   });
