@@ -345,6 +345,7 @@ describe('Beam Jobs Tab Component', () => {
     component.ngOnDestroy();
   });
 
+  for (let i = 0; i < 100; i++) {
   it('should show the job output', async () => {
     const autocomplete = await loader.getHarness(MatAutocompleteHarness);
     const input = await loader.getHarness(MatInputHarness);
@@ -375,7 +376,8 @@ describe('Beam Jobs Tab Component', () => {
     expect((await loader.getAllHarnesses(MatDialogHarness)).length).toEqual(0);
 
     component.ngOnDestroy();
-  });
+  })  
+ };
 
   it('should display View on Dataflow button for jobs with dataflowJobId', async () => {
     const autocomplete = await loader.getHarness(MatAutocompleteHarness);
