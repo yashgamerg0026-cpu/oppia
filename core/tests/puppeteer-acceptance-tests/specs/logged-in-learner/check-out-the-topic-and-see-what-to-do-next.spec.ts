@@ -234,7 +234,7 @@ describe('Logged-in Learner', function () {
       await loggedInLearner.expectTopicPageBreadcrumbToContain('Math');
       await loggedInLearner.expectStoryCardToBeVisible();
       await loggedInLearner.expectStoryTitleToContain('The Fraction Journey');
-      await loggedInLearner.expectScreenshotToMatch(
+      await loggedInLearner.expectComingSoonChaptersCardToMatchScreenshot(
         'topicPageStoryCard',
         __dirname
       );

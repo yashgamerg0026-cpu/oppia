@@ -4861,6 +4861,39 @@ export class LoggedInUser extends BaseUser {
   }
 
   /**
+   * Compares a screenshot of only the Coming Soon chapters card with the saved
+   * baseline. The full top of the topic page includes the chapter navigator,
+   * which is not rendered in the same way on every run, so this crops the
+   * screenshot to the card, whose contents stay the same.
+   * @param {string} imageName - The name for the image.
+   * @param {string} testPath - The path of the file that called this function.
+   */
+  async expectComingSoonChaptersCardToMatchScreenshot(
+    imageName: string,
+    testPath: string
+  ): Promise<void> {
+    await this.expectElementToBeVisible(comingSoonChaptersListSelector);
+    const element = await this.page.$(comingSoonChaptersListSelector);
+    if (!element) {
+      throw new Error(
+        `Coming soon chapters card was not found for ${imageName}.`
+      );
+    }
+    // The screenshot clip uses page coordinates, so the scroll offset is added
+    // to the element's viewport position.
+    const clip = await element.evaluate(el => {
+      const rect = el.getBoundingClientRect();
+      return {
+        x: rect.x + window.scrollX,
+        y: rect.y + window.scrollY,
+        width: rect.width,
+        height: rect.height,
+      };
+    });
+    await this.expectScreenshotToMatch(imageName, testPath, undefined, {clip});
+  }
+
+  /**
    * Verifies that the adventure navigation dock is visible.
    */
   async expectAdventureNavigationDockToBeVisible(): Promise<void> {
