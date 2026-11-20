@@ -4150,11 +4150,30 @@ export class ExplorationEditor extends BaseUser {
     );
 
     if (this.isViewportAtMobileWidth()) {
-      await this.page.click(closeModalButtonSelector);
-      await this.expectElementToBeVisible(
-        explorationStateGraphModalSelector,
-        false
-      );
+      // Scope the close button to the state graph modal, so a close button
+      // from another open modal cannot be clicked instead.
+      const scopedCloseButtonSelector = `${explorationStateGraphModalSelector} ${closeModalButtonSelector}`;
+      await this.page.waitForSelector(scopedCloseButtonSelector, {
+        visible: true,
+      });
+      await this.page.click(scopedCloseButtonSelector);
+      try {
+        await this.expectElementToBeVisible(
+          explorationStateGraphModalSelector,
+          false
+        );
+      } catch (error) {
+        // A click made while the modal is still animating open can be lost,
+        // so retry the close once before failing.
+        await this.page.waitForSelector(scopedCloseButtonSelector, {
+          visible: true,
+        });
+        await this.page.click(scopedCloseButtonSelector);
+        await this.expectElementToBeVisible(
+          explorationStateGraphModalSelector,
+          false
+        );
+      }
     }
   }
 
