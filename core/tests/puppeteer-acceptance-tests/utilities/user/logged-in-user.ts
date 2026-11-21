@@ -4894,6 +4894,34 @@ export class LoggedInUser extends BaseUser {
   }
 
   /**
+   * TEMPORARY DIAGNOSTIC for #27538. Logs how many arcs the topic data
+   * returned for each story, so failing runs show whether arcs were missing.
+   * @param {string} classroomUrlFragment - The classroom URL fragment.
+   * @param {string} topicUrlFragment - The topic URL fragment.
+   */
+  async logTopicArcCounts(
+    classroomUrlFragment: string,
+    topicUrlFragment: string
+  ): Promise<void> {
+    const arcCounts = await this.page.evaluate(
+      async (classroom: string, topic: string) => {
+        const response = await fetch(
+          `/topic_data_handler/${classroom}/${topic}`
+        );
+        const data = await response.json();
+        return (data.canonical_story_dicts ?? []).map(
+          (story: {arcs?: unknown[]}) => (story.arcs ?? []).length
+        );
+      },
+      classroomUrlFragment,
+      topicUrlFragment
+    );
+    console.log(
+      `ARC_DIAGNOSTIC arcCountsPerStory=${JSON.stringify(arcCounts)}`
+    );
+  }
+
+  /**
    * Verifies that the adventure navigation dock is visible.
    */
   async expectAdventureNavigationDockToBeVisible(): Promise<void> {

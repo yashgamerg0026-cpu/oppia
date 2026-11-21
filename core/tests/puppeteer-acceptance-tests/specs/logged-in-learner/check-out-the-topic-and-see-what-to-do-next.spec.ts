@@ -226,6 +226,7 @@ describe('Logged-in Learner', function () {
     async function () {
       await loggedInLearner.openTopicPage('math', 'fractions');
       await loggedInLearner.expectTopicPageTitleToContain('Fractions');
+      await loggedInLearner.logTopicArcCounts('math', 'fractions');
       await loggedInLearner.expectTopicPageDescriptionToBePresent();
       // The CUJ Topic Header requires breadcrumbs in the format
       // "Classroom → Classroom name → Topic", so verify both the root and the
