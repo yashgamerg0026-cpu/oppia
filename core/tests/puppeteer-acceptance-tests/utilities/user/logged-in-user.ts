@@ -4908,7 +4908,9 @@ export class LoggedInUser extends BaseUser {
         const response = await fetch(
           `/topic_data_handler/${classroom}/${topic}`
         );
-        const data = await response.json();
+        const text = await response.text();
+        // Strip the XSSI prefix the backend adds before the JSON body.
+        const data = JSON.parse(text.substring(5));
         return (data.canonical_story_dicts ?? []).map(
           (story: {arcs?: unknown[]}) => (story.arcs ?? []).length
         );
